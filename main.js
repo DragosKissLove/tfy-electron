@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const functions = require('./functions'); // <-- importă funcțiile
+const functions = require('./functions');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -8,8 +8,10 @@ function createWindow() {
     height: 700,
     frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
       contextIsolation: true,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, 'preload.js')
     },
   });
 
@@ -34,4 +36,14 @@ app.whenReady().then(() => {
   });
 });
 
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
