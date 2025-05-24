@@ -1,61 +1,78 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
 import { motion } from 'framer-motion';
+import { FiGrid, FiTool, FiStar, FiSettings, FiInfo } from 'react-icons/fi';
 
-const tabs = ['Apps', 'Tools', 'Extra', 'Settings', 'About'];
+const tabs = [
+  { id: 'Apps', icon: FiGrid },
+  { id: 'Tools', icon: FiTool },
+  { id: 'Extra', icon: FiStar },
+  { id: 'Settings', icon: FiSettings },
+  { id: 'About', icon: FiInfo }
+];
 
 const Sidebar = ({ active, onChange }) => {
   const { theme } = useTheme();
 
   return (
-    <div
+    <motion.div
+      initial={{ x: -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
       style={{
-        width: 180,
+        width: 80,
         height: '100vh',
-        backgroundColor: 'black',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderRight: `2px solid ${theme.border}`,
+        background: theme.cardBg,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: `1px solid ${theme.border}`,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center', // ⬅️ doar pe verticală
-        gap: 12,
-        padding: '0 12px',
+        alignItems: 'center',
+        padding: '32px 0',
+        gap: 16,
+        position: 'sticky',
+        top: 0
       }}
     >
-      {tabs.map((tab) => (
+      {tabs.map(({ id, icon: Icon }) => (
         <motion.button
-          key={tab}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => onChange(tab)}
+          key={id}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onChange(id)}
           style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '16px',
-            padding: '12px 18px',
-            color: theme.text,
-            fontSize: '15px',
-            fontWeight: 500,
-            cursor: 'pointer',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            transition: 'all 0.3s ease',
-            boxShadow: tab === active
-              ? `0 4px 20px ${theme.primary}55, 0 0 5px ${theme.primary}aa inset`
-              : '0 1px 4px rgba(0,0,0,0.2)',
+            width: 48,
+            height: 48,
+            border: 'none',
+            borderRadius: '12px',
+            background: id === active ? theme.accent : 'transparent',
+            color: id === active ? '#FFF' : theme.text,
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-            textAlign: 'center',
-            width: '100%',            // 🔥 ocupa toată lățimea disponibilă
-            margin: '0 auto',         // 🔥 centrat pe orizontală
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            position: 'relative'
           }}
         >
-          {tab}
+          <Icon size={24} />
+          {id === active && (
+            <motion.div
+              layoutId="activeTab"
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '12px',
+                background: theme.accent,
+                zIndex: -1
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          )}
         </motion.button>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
