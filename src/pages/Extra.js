@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../ThemeContext';
 
 const Extra = () => {
   const { theme } = useTheme();
+  const [updateStatus, setUpdateStatus] = useState('');
 
   const handleCheckUpdates = async () => {
     try {
-      await window.api.runPythonFunction('check_for_updates');
+      // Check if we're in Electron environment and the API is available
+      if (window.api && typeof window.api.runPythonFunction === 'function') {
+        await window.api.runPythonFunction('check_for_updates');
+        setUpdateStatus('Update check completed');
+      } else {
+        console.warn('Electron API not available - app may be running in development mode');
+        setUpdateStatus('Update checking is only available in the desktop app');
+      }
     } catch (error) {
       console.error('Error checking updates:', error);
+      setUpdateStatus('Failed to check for updates');
     }
   };
 
@@ -35,11 +44,22 @@ const Extra = () => {
           cursor: 'pointer',
           fontSize: '15px',
           fontWeight: 500,
-          boxShadow: theme.shadow
+          boxShadow: theme.shadow,
+          marginBottom: '10px'
         }}
       >
         Check for Updates
       </motion.button>
+
+      {updateStatus && (
+        <p style={{ 
+          marginTop: '10px',
+          color: theme.text,
+          fontSize: '14px'
+        }}>
+          {updateStatus}
+        </p>
+      )}
     </motion.div>
   );
 };
