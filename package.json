@@ -18,7 +18,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "electron": "electron main-electron.js"
+    "electron": "electron main-electron.js",
+    "dev": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [
