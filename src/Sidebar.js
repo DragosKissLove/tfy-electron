@@ -12,7 +12,7 @@ const tabs = [
 ];
 
 const Sidebar = ({ active, onChange }) => {
-  const { theme } = useTheme();
+  const { theme, primaryColor } = useTheme();
 
   return (
     <motion.div
@@ -45,7 +45,7 @@ const Sidebar = ({ active, onChange }) => {
             height: 48,
             border: 'none',
             borderRadius: '12px',
-            background: id === active ? theme.accent : 'transparent',
+            background: id === active ? primaryColor : 'transparent',
             color: id === active ? '#FFF' : theme.text,
             display: 'flex',
             alignItems: 'center',
@@ -64,10 +64,14 @@ const Sidebar = ({ active, onChange }) => {
                 width: '100%',
                 height: '100%',
                 borderRadius: '12px',
-                background: theme.accent,
+                background: primaryColor,
                 zIndex: -1
               }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 300, 
+                damping: 30 
+              }}
             />
           )}
         </motion.button>
