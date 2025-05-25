@@ -1,6 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
+const { exec } = require('child_process');
+const fs = require('fs');
+const axios = require('axios');
+const extract = require('extract-zip');
 const store = new Store();
 
 function createWindow() {
@@ -32,7 +36,9 @@ app.whenReady().then(() => {
         case 'run-optimization':
           return await runOptimization();
         case 'download-roblox':
-          return await downloadRobloxPlayer(args.version);
+          return await downloadRobloxPlayer(args.version, args.logCallback, args.progressCallback);
+        case 'github-auth':
+          return await handleGithubAuth();
         default:
           throw new Error('Function not found');
       }
@@ -52,6 +58,65 @@ app.whenReady().then(() => {
     return true;
   });
 });
+
+async function checkForUpdates() {
+  try {
+    const currentVersion = "3.0.0";
+    const response = await axios.get("https://raw.githubusercontent.com/DragosKissLove/testbot/main/tfy_info.json");
+    const data = response.data;
+    return {
+      currentVersion,
+      latestVersion: data.version,
+      changelog: data.changelog,
+      downloadUrl: data.download_url,
+      hasUpdate: data.version > currentVersion
+    };
+  } catch (error) {
+    throw new Error(`Update check failed: ${error.message}`);
+  }
+}
+
+async function cleanTemp() {
+  return new Promise((resolve, reject) => {
+    exec('del /s /f /q %temp%\\* && del /s /f /q C:\\Windows\\Temp\\*', (error) => {
+      if (error) {
+        reject(new Error(`Failed to clean temp files: ${error.message}`));
+      } else {
+        resolve({ success: true, message: 'Temporary files cleaned successfully!' });
+      }
+    });
+  });
+}
+
+async function runOptimization() {
+  try {
+    const response = await axios.get("https://raw.githubusercontent.com/DragosKissLove/testbot/main/TFY%20Optimization.bat");
+    const tempPath = path.join(app.getPath('temp'), "TFY_Optimization.bat");
+    fs.writeFileSync(tempPath, response.data);
+    
+    return new Promise((resolve, reject) => {
+      exec(`powershell -Command "Start-Process '${tempPath}' -Verb RunAs"`, (error) => {
+        if (error) {
+          reject(new Error(`Optimization failed: ${error.message}`));
+        } else {
+          resolve({ success: true, message: 'Optimization completed successfully!' });
+        }
+      });
+    });
+  } catch (error) {
+    throw new Error(`Failed to run optimization: ${error.message}`);
+  }
+}
+
+async function downloadRobloxPlayer(versionHash, logCallback, progressCallback) {
+  // Implementation will be added in the next update
+  throw new Error('Function not implemented yet');
+}
+
+async function handleGithubAuth() {
+  // Implementation will be added in the next update
+  throw new Error('Function not implemented yet');
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
