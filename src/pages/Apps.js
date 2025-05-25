@@ -29,7 +29,18 @@ const Apps = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <h2 style={{ marginBottom: '20px' }}>📦 Install Apps</h2>
+      <motion.h2 
+        style={{ 
+          marginBottom: '20px',
+          background: `linear-gradient(45deg, ${theme.text}, ${theme.primary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          padding: '10px',
+          borderRadius: '8px'
+        }}
+      >
+        📦 Install Apps
+      </motion.h2>
 
       <div
         style={{
