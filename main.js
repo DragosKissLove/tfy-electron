@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const functions = require('./functions');
+const Store = require('electron-store');
+const store = new Store();
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -8,9 +9,8 @@ function createWindow() {
     height: 700,
     frame: false,
     webPreferences: {
-      nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false,
+      nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js')
     },
   });
@@ -21,18 +21,35 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  ipcMain.handle('run-python-function', async (event, funcName) => {
+  // Handle IPC calls
+  ipcMain.handle('run-function', async (event, { name, args }) => {
     try {
-      const func = functions[funcName];
-      if (func) {
-        const result = await func();
-        return result;
-      } else {
-        throw new Error('Function not found');
+      switch (name) {
+        case 'check-updates':
+          return await checkForUpdates();
+        case 'clean-temp':
+          return await cleanTemp();
+        case 'run-optimization':
+          return await runOptimization();
+        case 'download-roblox':
+          return await downloadRobloxPlayer(args.version);
+        default:
+          throw new Error('Function not found');
       }
     } catch (error) {
-      return `❌ Error: ${error.message}`;
+      console.error('Error:', error);
+      return { error: error.message };
     }
+  });
+
+  // Handle settings storage
+  ipcMain.handle('get-settings', () => {
+    return store.get('settings');
+  });
+
+  ipcMain.handle('save-settings', (event, settings) => {
+    store.set('settings', settings);
+    return true;
   });
 });
 

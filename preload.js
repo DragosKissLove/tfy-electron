@@ -1,8 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld(
-  'api',
-  {
-    runPythonFunction: (funcName) => ipcRenderer.invoke('run-python-function', funcName)
-  }
-);
+contextBridge.exposeInMainWorld('electron', {
+  runFunction: (name, args) => ipcRenderer.invoke('run-function', { name, args }),
+  getSettings: () => ipcRenderer.invoke('get-settings'),
+  saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings)
+});
