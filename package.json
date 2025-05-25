@@ -7,6 +7,9 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.6.2",
+    "electron-store": "^8.1.0",
+    "firebase": "^10.6.0",
     "framer-motion": "^10.16.4",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
@@ -18,8 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "electron": "electron main-electron.js",
-    "dev": "react-scripts start"
+    "electron": "electron main.js",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +43,8 @@
     ]
   },
   "devDependencies": {
-    "electron": "^26.2.1"
+    "concurrently": "^8.2.2",
+    "electron": "^26.2.1",
+    "wait-on": "^7.2.0"
   }
 }
