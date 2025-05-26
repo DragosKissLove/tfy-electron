@@ -29,26 +29,3 @@ html, body, #root {
   display: flex;
   gap: 8px;
 }
-
-.window-control {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.window-control:hover {
-  filter: brightness(1.2);
-}
-
-.window-close {
-  background: #ff5f56;
-}
-
-.window-minimize {
-  background: #ffbd2e;
-}
-
-.window-maximize {
-  background: #27c93f;
-}
