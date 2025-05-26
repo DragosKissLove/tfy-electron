@@ -7,45 +7,22 @@ import Tools from './pages/Tools';
 import Extra from './pages/Extra';
 import Settings from './Settings';
 import About from './pages/About';
-import Login from './components/Login';
 import WindowControls from './components/WindowControls';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const App = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('Apps');
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if (!window.electron) {
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const settings = await window.electron.getSettings();
-        if (settings?.user) {
-          setUser(settings.user);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuth();
+    setTimeout(() => setIsLoading(false), 1000);
   }, []);
 
   const pageVariants = {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
-  };
-
-  const handleLogin = (userData) => {
-    setUser(userData);
-    window.electron.saveSettings({ user: userData });
   };
 
   if (isLoading) {
@@ -67,19 +44,10 @@ const App = () => {
     );
   }
 
-  if (!user) {
-    return (
-      <>
-        <WindowControls />
-        <Login onLogin={handleLogin} />
-      </>
-    );
-  }
-
   return (
     <div className="flex bg-black min-h-screen relative">
       <WindowControls />
-      <Sidebar active={activeTab} onChange={setActiveTab} user={user} />
+      <Sidebar active={activeTab} onChange={setActiveTab} />
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
