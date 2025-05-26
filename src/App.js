@@ -18,23 +18,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if (!window.electron) {
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const settings = await window.electron.getSettings();
-        if (settings?.user) {
-          setUser(settings.user);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuth();
+    // Simulate a quick loading state
+    setTimeout(() => setIsLoading(false), 1000);
   }, []);
 
   const pageVariants = {
@@ -45,7 +30,6 @@ const App = () => {
 
   const handleLogin = (userData) => {
     setUser(userData);
-    window.electron.saveSettings({ user: userData });
   };
 
   if (isLoading) {
@@ -61,7 +45,7 @@ const App = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="w-12 h-12 rounded-full border-2 border-pink-500 border-t-transparent"
+          className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent"
         />
       </div>
     );
