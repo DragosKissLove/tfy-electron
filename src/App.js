@@ -45,7 +45,7 @@ const App = () => {
   }
 
   return (
-    <div className="flex bg-black min-h-screen relative">
+    <div className="flex bg-black min-h-screen">
       <WindowControls />
       <Sidebar active={activeTab} onChange={setActiveTab} />
       <AnimatePresence mode="wait">
@@ -56,7 +56,7 @@ const App = () => {
           exit="exit"
           variants={pageVariants}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="flex-1 h-screen overflow-auto"
+          className="flex-1 ml-20 p-8"
         >
           {(() => {
             switch (activeTab) {
