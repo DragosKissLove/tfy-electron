@@ -8,6 +8,7 @@ import Extra from './pages/Extra';
 import Settings from './Settings';
 import About from './pages/About';
 import Login from './components/Login';
+import WindowControls from './components/WindowControls';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const App = () => {
@@ -49,13 +50,7 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        background: theme.background 
-      }}>
+      <div className="flex justify-center items-center h-screen bg-black">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -66,32 +61,25 @@ const App = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: '50%',
-            border: `3px solid ${theme.primary}`,
-            borderTopColor: 'transparent'
-          }}
+          className="w-12 h-12 rounded-full border-2 border-pink-500 border-t-transparent"
         />
       </div>
     );
   }
 
   if (!user) {
-    return <Login onLogin={handleLogin} />;
+    return (
+      <>
+        <WindowControls />
+        <Login onLogin={handleLogin} />
+      </>
+    );
   }
 
-  const renderContent = () => {
-    const Component = {
-      Apps,
-      Tools,
-      Extra,
-      Settings,
-      About
-    }[activeTab];
-
-    return (
+  return (
+    <div className="flex bg-black min-h-screen relative">
+      <WindowControls />
+      <Sidebar active={activeTab} onChange={setActiveTab} user={user} />
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
@@ -100,29 +88,20 @@ const App = () => {
           exit="exit"
           variants={pageVariants}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ 
-            flex: 1,
-            height: '100vh',
-            overflow: 'auto',
-            background: `linear-gradient(135deg, ${theme.background}00 0%, ${theme.background} 100%)`
-          }}
+          className="flex-1 h-screen overflow-auto"
         >
-          <Component />
+          {(() => {
+            switch (activeTab) {
+              case 'Apps': return <Apps />;
+              case 'Tools': return <Tools />;
+              case 'Extra': return <Extra />;
+              case 'Settings': return <Settings />;
+              case 'About': return <About />;
+              default: return null;
+            }
+          })()}
         </motion.div>
       </AnimatePresence>
-    );
-  };
-
-  return (
-    <div style={{ 
-      display: 'flex',
-      background: theme.background,
-      color: theme.text,
-      minHeight: '100vh',
-      position: 'relative'
-    }}>
-      <Sidebar active={activeTab} onChange={setActiveTab} user={user} />
-      {renderContent()}
     </div>
   );
 };

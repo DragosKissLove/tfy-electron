@@ -17,13 +17,21 @@ function createWindow() {
       nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js')
     },
+    backgroundColor: '#000000'
   });
 
   win.loadURL('http://localhost:3000');
-}
 
-app.whenReady().then(() => {
-  createWindow();
+  // Window control handlers
+  ipcMain.on('window-close', () => win.close());
+  ipcMain.on('window-minimize', () => win.minimize());
+  ipcMain.on('window-maximize', () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  });
 
   // Handle IPC calls
   ipcMain.handle('run-function', async (event, { name, args }) => {
@@ -57,7 +65,9 @@ app.whenReady().then(() => {
     store.set('settings', settings);
     return true;
   });
-});
+}
+
+app.whenReady().then(createWindow);
 
 async function checkForUpdates() {
   try {
