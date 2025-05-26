@@ -12,31 +12,20 @@ const WindowControls = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleMinimize}
-        className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center group transition-colors"
-      >
-        <div className="w-3 h-[2px] bg-zinc-400 group-hover:bg-white transition-colors" />
-      </motion.button>
-
+        className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 transition-colors"
+      />
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleMaximize}
-        className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center group transition-colors"
-      >
-        <div className="w-3 h-3 border-2 border-zinc-400 group-hover:border-white transition-colors" />
-      </motion.button>
-
+        className="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 transition-colors"
+      />
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleClose}
-        className="w-6 h-6 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center group transition-colors"
-      >
-        <div className="relative w-3 h-3">
-          <div className="absolute top-1/2 left-0 w-full h-[2px] bg-red-100 rotate-45" />
-          <div className="absolute top-1/2 left-0 w-full h-[2px] bg-red-100 -rotate-45" />
-        </div>
-      </motion.button>
+        className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-colors"
+      />
     </div>
   );
 };
