@@ -23,8 +23,10 @@ const Login = ({ onLogin }) => {
       // Simulate authentication - replace with your actual auth logic
       if (username && password) {
         onLogin({ username });
-        // Safely access window.electron
-        window.electron?.saveSettings({ user: { username } });
+        // Check if electron is available before using it
+        if (window.electron) {
+          window.electron.saveSettings({ user: { username } });
+        }
       } else {
         setError('Invalid credentials');
       }
@@ -35,8 +37,10 @@ const Login = ({ onLogin }) => {
 
   const handleGuestLogin = () => {
     onLogin({ username: 'Guest' });
-    // Safely access window.electron
-    window.electron?.saveSettings({ user: { username: 'Guest' } });
+    // Check if electron is available before using it
+    if (window.electron) {
+      window.electron.saveSettings({ user: { username: 'Guest' } });
+    }
   };
 
   return (
