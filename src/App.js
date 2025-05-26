@@ -18,6 +18,10 @@ const App = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (!window.electron) {
+        setIsLoading(false);
+        return;
+      }
       try {
         const settings = await window.electron.getSettings();
         if (settings?.user) {
